@@ -8,6 +8,6 @@ public interface CCTransactionDAO {
 	public int saveCCTransactionDetails(CCTransaction transaction);
 	public void saveSupplierResponseCCTransactionData(CCTransaction transaction );
 	public void saveSupplierFinalResponse(CCTransaction transaction);
-	public List<CCTransaction> getTransactionDetailsByMarchantTxnId(int marchantTxnId);
+	public CCTransaction getTransactionDetailsByMarchantTxnId(int marchantTxnId);
 
 }

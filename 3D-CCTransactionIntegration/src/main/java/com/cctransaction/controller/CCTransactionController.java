@@ -30,7 +30,7 @@ public class CCTransactionController {
 	}
 
 	@PostMapping(value = "/getTransDetalisById")
-	public List<CCTransaction> getTransactionDetailsById(@RequestParam int marchantTxnId, HttpServletRequest request) {
+	public CCTransaction getTransactionDetailsById(@RequestParam int marchantTxnId, HttpServletRequest request) {
 		return service.getTransactionDetailsByMarchantTxnId(marchantTxnId);
 
 	}
