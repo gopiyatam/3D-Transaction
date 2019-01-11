@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>credit card page</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<link href="valid.css" rel="stylesheet">
+<!-- <script type="text/javascript" src="./loginCheck.js"></script> -->
+
+</head>
+<body>
+	<h1 align="center">Enter Credit Card Details</h1>
+	<form class="simpleForm" name="cctrans">
+
+		<input type="text" name="firstname" id="firstname"
+			placeholder="Firstname">
+		<p class="error"></p>
+		<input type="text" name="lastname" id="lastname"
+			placeholder="Lastname">
+		<p class="error"></p>
+		<input type="text" name="amount" id="amount" placeholder="Amount">
+		<p class="error"></p>
+		<input type="text" name="carditCardNumber" id="carditCardNumber"
+			placeholder="cardit Card Number">
+		<p class="error"></p>
+		<input type="text" name="expMonth" id="expMonth"
+			placeholder="Expire Month">
+		<p class="error"></p>
+		<input type="text" name="expYear" id="expYear"
+			placeholder="Expire Year">
+		<p class="error"></p>
+		<input type="password" name="cvv" id="cvv" placeholder="CVV">
+		<p class="error"></p>
+		
+	</form>
+	<button  id="trans" style="background-color:red;margin-left:auto; margin-right:auto;display:block; margin-top:2%;margin-bottom:0%" onclick="ValidForm()" >proceed</button>
+	<h1 align="center">Enter Merchant Transaction number</h1>
+	<form class="simpleForm" name="txnMar">
+		<input type="text" name="machnttxnid" id="txnmarID"
+			placeholder="Merchant Transaction Id">
+		<button id="txnID">Search</button>
+
+	</form>
+	<div id="display"></div>
+	<script src="valid.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+							$('#trans').click(function() {
+
+												var valid = ValidForm();
+												console.log("Valid : " + valid);
+												if (valid == false) {
+                                                    
+													return;
+												}
+							
+												var transaction = {
+													"firstname" : $("#firstname").val(),
+													"lastname" : $("#lastname").val(),
+													"amount" : $("#amount").val(),
+													"carditCardNumber" : $("#carditCardNumber").val(),
+													"expMonth" : $("#expMonth").val(),
+													"expYear" : $("#expYear").val(),
+													"cvv" : $("#cvv").val()
+												};
+												var urlPath = 'http://localhost:2020/getCCTransDetails';
+
+												$.ajax({
+															type : "POST",
+															url : urlPath,
+															xhrFields : {
+																withCredentials : true
+															},
+															contentType : 'application/json',
+
+															data : JSON
+																	.stringify(transaction),
+															success : function(
+																	response) {
+																console.log(response);
+																var dataObject = jQuery.parseJSON(response);
+																if (dataObject.status == "Success") {
+																	document.cctrans.reset();
+																	alert("marchant Transaction ID="
+																			+ dataObject.merchant_txnId
+																			+ "\nTRANSACTION COMPLETED");
+
+																	//window.location.replace('http://localhost:2020/transSuccess.html');
+																} else {
+																	alert("marchant Transaction ID="
+																			+ dataObject.merchant_txnId
+																			+ "\nINSUFFICIENT FUNDS\nTRANSACTION FAILED");
+																}
+															}
+														});
+												return false;
+											});
+							$('#txnID').click(function() {
+								$.ajax({
+									type : "POST",
+									url : 'http://localhost:2020/getTransDetalisById',
+									datatype : "int",
+									data : {
+										marchantTxnId : $("#txnmarID").val()
+
+									},
+									success : function(response)
+
+									{
+										console.log(response);
+
+										$("#display").html(JSON.stringify(response));
+
+									}
+								});
+								return false;
+							});
+						});
+	</script>
+	
+</body>
+</html>
