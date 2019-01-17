@@ -44,6 +44,9 @@
 
 	</form>
 	<div id="display"></div>
+	
+	
+	
 	<script src="valid.js"></script>
 	
 	<script>
@@ -99,10 +102,14 @@
 												return false;
 											});
 							$('#txnID').click(function() {
+								
 								$.ajax({
 									type : "POST",
 									url : 'http://localhost:2020/getTransDetalisById',
-									datatype : "int",
+									xhrFields : {
+										withCredentials : true
+									},
+									datatype : "json",
 									data : {
 										marchantTxnId : $("#txnmarID").val()
 
@@ -110,11 +117,33 @@
 									success : function(response)
 
 									{
+										
+										if(response.length != 0){
 										console.log(response);
-
-										$("#display").html(JSON.stringify(response));
-
+										
+									 var content = 'Marchent Transaction Id : '+response.merchant_txnId +'<br>' ;
+									 content += ' FirstName : '+response.firstname+'<br>' ;
+									 content += ' LastName : '+response.lastname+'<br>' ;
+									 content += ' Amount : '+response.amount+'<br>' ;
+									 content += ' Cardit Card Number : '+response.carditCardNumber+'<br>' ;
+									 content += ' CVV : '+response.cvv +'<br>';
+									 content += ' Expire Month : '+response.expMonth +'<br>';
+									 content += ' Expire Year : '+response.expYear +'<br>';
+									 content += '  Supplier Transaction ID : '+response.supplierTxnId+'<br>' ;
+									 content += ' Status  : '+response.status+'<br>' ;
+								
+									 $("#display").empty().append(content);
+									 
+									
+										}
+										else{
+											alert("Invalid merchant Transaction number");
+											document.txnMar.reset();
+										   
+										}
+										
 									}
+									 
 								});
 								return false;
 							});
